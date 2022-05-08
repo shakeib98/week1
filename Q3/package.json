@@ -12,6 +12,9 @@
     "snarkjs": "^0.4.16"
   },
   "scripts": {
-    "test": ". scripts/bonus-compile.sh && node scripts/bonus-bump-solidity.js && npx hardhat test"
+    "test": ". scripts/bonus-compile.sh && node scripts/bonus-bump-solidity.js && npx hardhat test",
+    "test:less-than-10": "node scripts/bump-solidity-less-than-10.js && npx hardhat test --grep LessThan10",
+    "test:range-proof": "node scripts/bump-solidity-range-proof.js && npx hardhat test --grep RangeProof",
+    "test:bonus":"node scripts/bonus-bump-solidity.js && npx hardhat test --grep SystemOfEquations"
   }
 }

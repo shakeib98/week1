@@ -35,6 +35,8 @@ describe("SystemOfEquations", function () {
 
     it("Should return true for correct proof", async function () {
         //[assignment] Add comments to explain what each line is doing
+
+        // getting proof and public signal through the groth16 library
         const { proof, publicSignals } = await groth16.fullProve({
             "x": ["15","17","19"],
             "A": [["1","1","1"],["1","2","3"],["2","-1","1"]],
@@ -42,8 +44,13 @@ describe("SystemOfEquations", function () {
         },
             "contracts/bonus/SystemOfEquations/SystemOfEquations_js/SystemOfEquations.wasm","contracts/bonus/SystemOfEquations/circuit_final.zkey");
 
+        console.log(publicSignals);
+
+        // converting the return variables into bigints
         const editedPublicSignals = unstringifyBigInts(publicSignals);
         const editedProof = unstringifyBigInts(proof);
+
+        //exporting the calldata to pass it into the smart contract function
         const calldata = await groth16.exportSolidityCallData(editedProof, editedPublicSignals);
     
         const argv = calldata.replace(/["[\]\s]/g, "").split(',').map(x => BigInt(x).toString());
@@ -53,6 +60,7 @@ describe("SystemOfEquations", function () {
         const c = [argv[6], argv[7]];
         const Input = argv.slice(8);
 
+        // executing the smart contract function to verify
         expect(await verifier.verifyProof(a, b, c, Input)).to.be.true;
     });
     it("Should return false for invalid proof", async function () {
